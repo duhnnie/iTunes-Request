@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <meta charset="utf-8"/>
+        <script type="text/javascript" src="js/jquery-1.12.2.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $('#results').on('click', '.result-item a', function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: 'play',
+                        data: {
+                            id: $(this).attr('data-id'),
+                            text: $(this).find('h4').text()
+                        },
+                        method: 'POST',
+                        beforeSend: function () {
+                            $('#results').empty();
+                            $('#info').empty();
+                        },
+                        success: function (data) {
+                            $('#info').append(data['text'] + ' was enqueued successfully!');
+                        },
+                    });
+                });
+                $('form').on('submit', function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: 'search',
+                        data: {
+                            q: $('#query').val()
+                        },
+                        beforeSend: function () {
+                            $('#results').empty();
+                            $('#info').empty();
+                        },
+                        success: function (data) {
+                            if (data.length == 0) {
+                                $('#info').text("0 results.");
+                            }
+                            data.forEach(function(item, index, arr) {
+                                $('#results').append('<li class="result-item"><a href="#" data-id="' + item['id'] + '"><h4>' + item['artist'] + ' - "' + item['name'] + '"</h4>' + item['album'] + ' (' + item['year'] + ')</a></li>');
+                            });
+                        },
+                        dataType: 'json'
+                    });
+                });
+            });
+        </script>
+        <style>
+            #results {
+                list-style: none;
+                margin: 0;
+                padding: 0px;
+            }
+            .result-item {
+                padding: 0;
+                margin-bottom: 0.5em;
+            }
+            .result-item a {
+                background: #F0F0F0;
+                padding: 1em;
+                display: block;
+            }
+            .result-item a:hover {
+                background: black;
+                color: white;
+            }
+            .result-item h4 {
+                margin: 0 0 0.5em 0;
+            }
+        </style>
+	</head>
+	<body>
+        <h1>What do you want you listen to?</h1>
+        <form>
+            <label>
+                Search:
+                <input type="text" id="query"/>
+            </label>
+            <input type="submit"/>
+        </form>
+        <video controls="" autoplay="" name="media"><source src="http://192.168.10.50:8000/" type="audio/mpeg"></video>
+        <div id="info"></div>
+        <ul id="results">
+        </ul>
+    </body>
+</html>
