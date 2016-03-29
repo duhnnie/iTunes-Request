@@ -8,10 +8,11 @@
                 $('#results').on('click', '.result-item a', function(e) {
                     e.preventDefault();
                     $.ajax({
-                        url: 'play',
+                        url: 'request',
                         data: {
                             id: $(this).attr('data-id'),
-                            text: $(this).find('h4').text()
+                            artist: $(this).attr('data-artist'),
+                            song: $(this).attr('data-song')
                         },
                         method: 'POST',
                         beforeSend: function () {
@@ -24,11 +25,16 @@
                     });
                 });
                 $('form').on('submit', function (e) {
+                    var query = $.trim($('#query').val());
                     e.preventDefault();
+                    if (query.length < 5) {
+                        $('#info').text("Too short. The query length must be greater than 4.");
+                        return;
+                    }
                     $.ajax({
                         url: 'search',
                         data: {
-                            q: $('#query').val()
+                            q: query
                         },
                         beforeSend: function () {
                             $('#results').empty();
@@ -39,7 +45,7 @@
                                 $('#info').text("0 results.");
                             }
                             data.forEach(function(item, index, arr) {
-                                $('#results').append('<li class="result-item"><a href="#" data-id="' + item['id'] + '"><h4>' + item['artist'] + ' - "' + item['name'] + '"</h4>' + item['album'] + ' (' + item['year'] + ')</a></li>');
+                                $('#results').append('<li class="result-item"><a href="#" data-id="' + item['id'] + '" data-artist="' + item['artist'] + '" data-song="' + item['name'] + '"><h4>' + item['artist'] + ' - "' + item['name'] + '"</h4>' + item['album'] + ' (' + item['year'] + ')</a></li>');
                             });
                         },
                         dataType: 'json'
@@ -80,7 +86,7 @@
             </label>
             <input type="submit"/>
         </form>
-        <video controls="" autoplay="" name="media"><source src="http://192.168.10.50:8000/" type="audio/mpeg"></video>
+        <video controls="" autoplay="" name="media"><source src="http://localhost:8000/" type="audio/mpeg"></video>
         <div id="info"></div>
         <ul id="results">
         </ul>

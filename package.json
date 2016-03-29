@@ -7,7 +7,8 @@
     "itunescontrol": "1.x",
     "express": "4.x",
     "mustache-express": "1.x",
-    "body-parser": "1.15.x"
+    "body-parser": "1.15.x",
+    "amqplib": "0.4.x"
   },
   "devDependencies": {},
   "scripts": {
