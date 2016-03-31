@@ -25,6 +25,12 @@
                 });
                 $('form').on('submit', function (e) {
                     e.preventDefault();
+                    var query = $.trim($('#query').val());
+                    e.preventDefault();
+                    if (query.length < 5) {
+                        $('#info').text("Too short. The query length must be greater than 4.");
+                        return;
+                    }
                     $.ajax({
                         url: 'search',
                         data: {
